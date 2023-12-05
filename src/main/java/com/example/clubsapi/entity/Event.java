@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -24,4 +26,12 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "event_club_fk",referencedColumnName = "id")
     private Clubs clubs;
+
+    @ManyToMany
+    @JoinTable(
+            name = "event_user",
+            joinColumns = @JoinColumn(name = "event_id",referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id")
+    )
+    private Set<UserEntity> userEntities = new HashSet<>();
 }

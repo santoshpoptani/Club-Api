@@ -26,7 +26,10 @@ public class UserEntity {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private Set<Roles> roles = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "userEntitySet")
     private Set<Clubs> clubs = new HashSet<>();
+
+    @ManyToMany
+    private Set<Event> events = new HashSet<>();
 
 }

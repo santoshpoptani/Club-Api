@@ -2,7 +2,7 @@ package com.example.clubsapi.controller;
 
 
 import com.example.clubsapi.dto.EventDto;
-import com.example.clubsapi.services.securityService.EventServiceImpl;
+import com.example.clubsapi.services.impl.EventServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,5 +29,11 @@ public class EventController {
         return ResponseEntity.ok(res);
     }
 
-
+    @PostMapping("/join/{eventName}")
+    public ResponseEntity<?> joinEvent(@PathVariable("eventName")String eventname){
+        eventService.joinEvent(eventname);
+        Map<String,String> res = new HashMap<>();
+        res.put("Message","Event joined succesfully");
+        return ResponseEntity.ok(res);
+    }
 }

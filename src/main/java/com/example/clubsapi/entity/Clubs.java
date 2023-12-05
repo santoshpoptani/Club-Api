@@ -28,7 +28,7 @@ public class Clubs {
     @OneToMany(mappedBy = "clubs")
     private List<Event> events = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "club_user",
             joinColumns = @JoinColumn(name = "club_id",referencedColumnName = "id"),

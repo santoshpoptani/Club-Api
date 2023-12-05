@@ -62,6 +62,7 @@ public class SecurityConfig {
                                         "/api/v1/auth/signup",
                                         "/api/v1/clubs/new",
                                         "/api/v1/user/join/**",
+                                        "/api/v1/events/**",
                                         "/api/v1/**",
                                         "/api/v1/auth/**",
                                         "/v3/api-docs/**",

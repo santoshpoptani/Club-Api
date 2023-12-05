@@ -1,12 +1,33 @@
 package com.example.clubsapi.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.clubsapi.dto.EventDto;
+import com.example.clubsapi.services.securityService.EventServiceImpl;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/events")
 public class EventController {
+
+    private EventServiceImpl eventService;
+
+    public EventController(EventServiceImpl eventService) {
+        this.eventService = eventService;
+    }
+
+    @PostMapping("/new/{clubName}")
+    public ResponseEntity<?> createEvent(@PathVariable("clubName") String Clubname,
+                                         @RequestBody EventDto eventDto){
+
+        eventService.saveEvent(Clubname,eventDto);
+        Map<String,String> res = new HashMap<>();
+        res.put("Message","Even Created Successfully "+eventDto.getEventname());
+        return ResponseEntity.ok(res);
+    }
 
 
 }

@@ -25,21 +25,35 @@ public class ClubController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<?> saveClub(@RequestBody ClubDto clubDto){
+    public ResponseEntity<?> saveClub(@RequestBody ClubDto clubDto) {
 
         clubsService.saveClub(clubDto);
-        Map<String,String> resp = new HashMap<>();
-        resp.put("Message","Club Registred Succesfully");
+        Map<String, String> resp = new HashMap<>();
+        resp.put("Message", "Club Registred Succesfully");
         return ResponseEntity.ok(resp);
 
     }
 
     @GetMapping("/allclubs")
-    public ResponseEntity<?> getallClubs(){
+    public ResponseEntity<?> getallClubs() {
 
         List<ClubResponseDto> collect = clubsService.findAllClubs();
 
         return ResponseEntity.ok(collect);
+    }
+
+    @DeleteMapping("/delete/{clubId}")
+    public ResponseEntity<?> deleteClub(@PathVariable("clubId") int clubId) {
+        clubsService.deleteclub(clubId);
+        return ResponseEntity.ok().build();
+
+
+    }
+
+    @PatchMapping("/update/{clubId}")
+    public ResponseEntity<?> updateClub(@RequestBody ClubDto clubDto, @PathVariable("clubId") int clubId) {
+        ClubDto cLubDto = clubsService.updateClub(clubDto, clubId);
+        return ResponseEntity.ok(cLubDto);
     }
 
 }

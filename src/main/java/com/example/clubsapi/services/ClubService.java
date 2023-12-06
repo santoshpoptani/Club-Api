@@ -11,4 +11,7 @@ public interface ClubService {
     void joinClub(String clubName);
 
     List<ClubResponseDto> findAllClubs();
+
+    void deleteclub(int id);
+    ClubDto updateClub(ClubDto clubDto,int ClubId);
 }

@@ -13,4 +13,8 @@ public interface EventService {
     List<EventResponseDto> getAllEvents();
 
     List<EventUserResponseDto> getEventandUserJoinedEvens();
+
+    EventDto updateEvent(int eventId,EventDto eventDto);
+
+    void deleteEvent(int eventId);
 }

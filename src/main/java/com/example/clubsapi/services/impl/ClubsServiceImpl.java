@@ -67,4 +67,19 @@ public class ClubsServiceImpl implements ClubService {
         }
         return list;
     }
+
+    @Override
+    public void deleteclub(int id) {
+        clubRepository.deleteById(id);
+    }
+
+    @Override
+    public ClubDto updateClub(ClubDto clubDto,int ClubID) {
+        Clubs clubs =clubRepository.findById(ClubID).get();
+        clubs.setTitle(clubDto.getClubName());
+        clubs.setContent(clubDto.getContent());
+        clubRepository.save(clubs);
+
+        return new ClubDto(clubs.getTitle(),clubs.getContent());
+    }
 }

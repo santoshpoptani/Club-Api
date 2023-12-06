@@ -88,5 +88,20 @@ public class EventServiceImpl implements EventService {
         return eventUserResponseDtoStream;
     }
 
+    @Override
+    public EventDto updateEvent(int eventId, EventDto eventDto) {
+       Event event= eventRepository.findById(eventId).get();
+       event.setTitle(eventDto.getEventname());
+       event.setContent(eventDto.getContent());
+       event.setEndDate(LocalDate.parse(eventDto.getEnddate()));
+       eventRepository.save(event);
+        return new EventDto(event.getTitle(),event.getContent(),event.getEndDate().toString());
+    }
+
+    @Override
+    public void deleteEvent(int eventId) {
+        eventRepository.deleteById(eventId);
+    }
+
 
 }

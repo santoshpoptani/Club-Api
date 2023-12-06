@@ -51,4 +51,17 @@ public class EventController {
         List<EventUserResponseDto> eventandUserJoinedEvens = eventService.getEventandUserJoinedEvens();
         return ResponseEntity.ok(eventandUserJoinedEvens);
     }
+
+    @PatchMapping("/update/{eventId}")
+    public ResponseEntity<?> updateEvent(@PathVariable("eventId")int eventId,@RequestBody EventDto eventDto){
+        EventDto dto = eventService.updateEvent(eventId,eventDto);
+        return ResponseEntity.ok(dto);
+
+    }
+
+    @DeleteMapping("/delete/{eventId}")
+    public ResponseEntity<?> deleteEvent(@PathVariable("eventId")int id){
+        eventService.deleteEvent(id);
+        return ResponseEntity.ok().build();
+    }
 }

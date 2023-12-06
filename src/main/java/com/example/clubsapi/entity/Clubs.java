@@ -26,7 +26,7 @@ public class Clubs {
     private String content;
     private LocalDate createdOn;
 
-    @OneToMany(mappedBy = "clubs")
+    @OneToMany(mappedBy = "clubs",cascade = CascadeType.REMOVE)
     private List<Event> events = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)

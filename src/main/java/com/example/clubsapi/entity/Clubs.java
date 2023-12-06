@@ -1,5 +1,6 @@
 package com.example.clubsapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jdk.dynalink.linker.LinkerServices;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,7 @@ public class Clubs {
             joinColumns = @JoinColumn(name = "club_id",referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id")
     )
+    @JsonIgnore
     private Set<UserEntity> userEntitySet = new HashSet<>();
 
     public int getId() {

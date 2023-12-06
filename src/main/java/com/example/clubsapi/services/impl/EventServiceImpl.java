@@ -1,6 +1,8 @@
 package com.example.clubsapi.services.impl;
 
 import com.example.clubsapi.dto.EventDto;
+import com.example.clubsapi.dto.EventResponseDto;
+import com.example.clubsapi.dto.EventUserResponseDto;
 import com.example.clubsapi.entity.Clubs;
 import com.example.clubsapi.entity.Event;
 import com.example.clubsapi.entity.UserEntity;
@@ -14,6 +16,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -52,6 +57,35 @@ public class EventServiceImpl implements EventService {
         if (user.getClubs().contains(event.getClubs()))
             event.getUserEntities().add(user);
         eventRepository.save(event);
+    }
+
+    @Override
+    public List<EventResponseDto> getAllEvents() {
+        List<EventResponseDto> collect = eventRepository.findAll().stream()
+                .map((event ->
+                        new EventResponseDto(
+                                event.getTitle(),
+                                event.getContent(),
+                                event.getStartDate(),
+                                event.getEndDate(),
+                                event.getClubs().getId()
+                        )
+                )).collect(Collectors.toList());
+        return collect;
+    }
+
+    @Override
+    public List<EventUserResponseDto> getEventandUserJoinedEvens() {
+        List<EventUserResponseDto> eventUserResponseDtoStream = eventRepository.findAll().stream()
+                .map(event -> new EventUserResponseDto(
+                        event.getTitle(),
+                        event.getContent(),
+                        event.getStartDate(),
+                        event.getEndDate(),
+                        event.getClubs().getId(),
+                        event.getUserEntities().stream().toList()
+                )).collect(Collectors.toList());
+        return eventUserResponseDtoStream;
     }
 
 

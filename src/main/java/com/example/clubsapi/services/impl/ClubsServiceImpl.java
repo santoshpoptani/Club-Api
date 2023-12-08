@@ -3,19 +3,20 @@ package com.example.clubsapi.services.impl;
 import com.example.clubsapi.dto.ClubDto;
 import com.example.clubsapi.dto.ClubResponseDto;
 import com.example.clubsapi.entity.Clubs;
-import com.example.clubsapi.entity.Event;
+import com.example.clubsapi.entity.ERole;
 import com.example.clubsapi.entity.UserEntity;
+import com.example.clubsapi.exception.AuthorizatoinException;
+import com.example.clubsapi.exception.ResousrceNotFoundException;
 import com.example.clubsapi.repository.ClubRepository;
 import com.example.clubsapi.repository.EventRepository;
 import com.example.clubsapi.repository.UserRepository;
 import com.example.clubsapi.services.ClubService;
-import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -33,20 +34,22 @@ public class ClubsServiceImpl implements ClubService {
 
     @Override
     public void saveClub(ClubDto clubDto) {
-        //TODO: get username from securitycontext
         Clubs clubs = new Clubs();
         clubs.setTitle(clubDto.getClubName());
         clubs.setContent(clubDto.getContent());
         clubs.setCreatedOn(LocalDate.now());
-        String userContext= (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userContext= (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user =userRepository.findByUsername(userContext).get();
+        if(user.getRoles().stream().toList().get(0).getName()!= ERole.ROLE_MODERATOR )
+            throw new AuthorizatoinException("UnAuthorized");
         clubs.getUserEntitySet().add(user);
         clubRepository.save(clubs);
     }
 
     @Override
     public void joinClub(String clubName) {
-        Clubs club = clubRepository.findByTitle(clubName).get();
+        Clubs club = clubRepository.findByTitle(clubName)
+                .orElseThrow(()->new ResousrceNotFoundException("No ClubName Found"));
         String userContext= (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userRepository.findByUsername(userContext).get();
         club.getUserEntitySet().add(user);
@@ -70,12 +73,17 @@ public class ClubsServiceImpl implements ClubService {
 
     @Override
     public void deleteclub(int id) {
+        clubRepository.findById(id)
+                .orElseThrow(()->new ResousrceNotFoundException("Id is not available in DB"));
         clubRepository.deleteById(id);
     }
 
     @Override
     public ClubDto updateClub(ClubDto clubDto,int ClubID) {
-        Clubs clubs =clubRepository.findById(ClubID).get();
+        Clubs clubs =clubRepository.findById(ClubID)
+                .orElseThrow(()->new ResousrceNotFoundException("Id is not found"));
+        if(clubDto == null)
+            throw new ResousrceNotFoundException("No Json Body Found");
         clubs.setTitle(clubDto.getClubName());
         clubs.setContent(clubDto.getContent());
         clubRepository.save(clubs);

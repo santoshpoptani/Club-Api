@@ -1,5 +1,6 @@
 package com.example.clubsapi.security;
 
+import com.example.clubsapi.dto.LoginDto;
 import com.example.clubsapi.jwt.JwtUtil;
 import com.example.clubsapi.services.securityService.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
@@ -23,6 +24,9 @@ public class securityFilter extends OncePerRequestFilter{
     private JwtUtil jwtutill;
     @Autowired
     private UserDetailsServiceImpl utill;
+
+    @Autowired
+    private LoginDto loginDto;
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -36,7 +40,7 @@ public class securityFilter extends OncePerRequestFilter{
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             Token = authorizationHeader.substring(7);
             try{
-                username = jwtutill.getSubject(Token);
+                username = loginDto.getUsername();
             }catch (Exception e)
             {
                 System.out.println("Error Extracting username " + e.getMessage());

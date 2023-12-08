@@ -6,6 +6,7 @@ import com.example.clubsapi.jwt.JwtUtil;
 import com.example.clubsapi.services.impl.UserServicesImpl;
 import com.example.clubsapi.services.securityService.UserDetailsImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +23,8 @@ public class AuthController {
     private AuthenticationManager manager;
    private UserServicesImpl userServices;
    private JwtUtil jwtUtil;
-
+   @Autowired
+   private LoginDto loginDto;
    @Autowired
     public AuthController(AuthenticationManager manager, UserServicesImpl userServices, JwtUtil jwtUtil) {
         this.manager = manager;
@@ -45,6 +47,7 @@ public class AuthController {
         Authentication authentication = manager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(),loginDto.getPassword())
         );
+        this.loginDto.setUsername(loginDto.getUsername());
         String jwtToken = jwtUtil.generateToken(loginDto.getUsername());
         UserDetailsImp userDetailsImp =(UserDetailsImp) authentication.getPrincipal();
         Map<String,String> response = new HashMap<>();

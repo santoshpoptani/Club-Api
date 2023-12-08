@@ -4,8 +4,11 @@ import com.example.clubsapi.dto.EventDto;
 import com.example.clubsapi.dto.EventResponseDto;
 import com.example.clubsapi.dto.EventUserResponseDto;
 import com.example.clubsapi.entity.Clubs;
+import com.example.clubsapi.entity.ERole;
 import com.example.clubsapi.entity.Event;
 import com.example.clubsapi.entity.UserEntity;
+import com.example.clubsapi.exception.AuthorizatoinException;
+import com.example.clubsapi.exception.ResousrceNotFoundException;
 import com.example.clubsapi.repository.ClubRepository;
 import com.example.clubsapi.repository.EventRepository;
 import com.example.clubsapi.repository.UserRepository;
@@ -38,7 +41,15 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void saveEvent(String ClubName, EventDto eventDto) {
-        Clubs clubs = clubRepository.findByTitle(ClubName).get();
+        Clubs clubs = clubRepository.findByTitle(ClubName)
+                .orElseThrow(()->new ResousrceNotFoundException("Club not Found"));
+
+        String usercontex = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        UserEntity user = userRepository.findByUsername(usercontex).get();
+
+        if(user.getRoles().stream().toList().get(0).getName()!= ERole.ROLE_MODERATOR)
+            throw new AuthorizatoinException("UnAuthorized user");
 
         Event event = new Event();
         event.setTitle(eventDto.getEventname());
@@ -51,7 +62,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void joinEvent(String EventName) {
-        Event event = eventRepository.findByTitle(EventName).get();
+        Event event = eventRepository.findByTitle(EventName)
+                .orElseThrow(()->new ResousrceNotFoundException("Event not found"));
         String userContext = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userRepository.findByName(userContext).get();
         if (user.getClubs().contains(event.getClubs()))
@@ -90,7 +102,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto updateEvent(int eventId, EventDto eventDto) {
-       Event event= eventRepository.findById(eventId).get();
+       Event event= eventRepository.findById(eventId)
+               .orElseThrow(()->new ResousrceNotFoundException("EventId Not Found"));
        event.setTitle(eventDto.getEventname());
        event.setContent(eventDto.getContent());
        event.setEndDate(LocalDate.parse(eventDto.getEnddate()));

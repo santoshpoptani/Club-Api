@@ -3,6 +3,7 @@ package com.example.clubsapi.security;
 import com.example.clubsapi.dto.LoginDto;
 import com.example.clubsapi.jwt.JwtUtil;
 import com.example.clubsapi.services.securityService.UserDetailsServiceImpl;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,7 +48,7 @@ public class securityFilter extends OncePerRequestFilter{
             }
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null ) {
             UserDetails userDetails = utill.loadUserByUsername(username);
             boolean isValid = jwtutill.isValidToken(Token, userDetails.getUsername());
             if (isValid) {

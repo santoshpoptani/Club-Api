@@ -1,6 +1,7 @@
 package com.example.clubsapi.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -42,8 +43,8 @@ public class JwtUtil {
         return (Username.equals(tokenUsername) && !isTokenExpired(Token));
     }
 
-    private boolean isTokenExpired(String token) {
-        return getExpirationDate(token).before(new Date(System.currentTimeMillis()));
+    public boolean isTokenExpired(String token) {
+            return getExpirationDate(token).before(new Date(System.currentTimeMillis()));
     }
 
     public Date getExpirationDate(String Token) {

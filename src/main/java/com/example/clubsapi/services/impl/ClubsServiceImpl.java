@@ -39,7 +39,8 @@ public class ClubsServiceImpl implements ClubService {
         clubs.setContent(clubDto.getContent());
         clubs.setCreatedOn(LocalDate.now());
         String userContext= (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserEntity user =userRepository.findByUsername(userContext).get();
+        UserEntity user =userRepository.findByUsername(userContext).
+                orElseThrow(()->new ResousrceNotFoundException("User not found"));
         if(user.getRoles().stream().toList().get(0).getName()!= ERole.ROLE_MODERATOR )
             throw new AuthorizatoinException("UnAuthorized");
         clubs.getUserEntitySet().add(user);

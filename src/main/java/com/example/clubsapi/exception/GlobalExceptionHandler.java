@@ -33,4 +33,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> handleAuthorizationException(AuthorizatoinException e){
         return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(JwtExpireException.class)
+    public ResponseEntity<?> handleJwtExpiredException(JwtExpireException e){
+        return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_ACCEPTABLE);
+    }
 }

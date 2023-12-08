@@ -46,7 +46,8 @@ public class EventServiceImpl implements EventService {
 
         String usercontex = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        UserEntity user = userRepository.findByUsername(usercontex).get();
+        UserEntity user = userRepository.findByUsername(usercontex).
+                orElseThrow(()->new ResousrceNotFoundException("User is not found"));
 
         if(user.getRoles().stream().toList().get(0).getName()!= ERole.ROLE_MODERATOR)
             throw new AuthorizatoinException("UnAuthorized user");

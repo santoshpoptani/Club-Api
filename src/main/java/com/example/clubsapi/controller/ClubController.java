@@ -6,6 +6,8 @@ import com.example.clubsapi.entity.Clubs;
 import com.example.clubsapi.services.impl.ClubsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -25,6 +27,7 @@ public class ClubController {
     }
 
     @PostMapping("/new")
+    @Secured({"ROLE_MODERATOR"})
     public ResponseEntity<?> saveClub(@RequestBody ClubDto clubDto) {
 
         clubsService.saveClub(clubDto);
@@ -34,6 +37,7 @@ public class ClubController {
 
     }
 
+    @Secured({"ROLE_MODERATOR","ROLE_USER"})
     @GetMapping("/allclubs")
     public ResponseEntity<?> getallClubs() {
 
@@ -42,6 +46,7 @@ public class ClubController {
         return ResponseEntity.ok(collect);
     }
 
+    @Secured({"ROLE_MODERATOR"})
     @DeleteMapping("/delete/{clubId}")
     public ResponseEntity<?> deleteClub(@PathVariable("clubId") int clubId) {
         clubsService.deleteclub(clubId);
@@ -50,6 +55,7 @@ public class ClubController {
 
     }
 
+    @Secured({"ROLE_MODERATOR"})
     @PatchMapping("/update/{clubId}")
     public ResponseEntity<?> updateClub(@RequestBody ClubDto clubDto, @PathVariable("clubId") int clubId) {
         ClubDto cLubDto = clubsService.updateClub(clubDto, clubId);

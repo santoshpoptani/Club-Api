@@ -3,6 +3,7 @@ package com.example.clubsapi.controller;
 import com.example.clubsapi.services.impl.ClubsServiceImpl;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,8 @@ public class UserController {
     }
 
 
+
+    @Secured({"ROLE_USER"})
     @PostMapping("/join/{clubName}")
     public ResponseEntity<?> joinClub(@PathVariable("clubName") String clubName){
             clubsService.joinClub(clubName);

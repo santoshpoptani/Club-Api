@@ -26,6 +26,11 @@ public class Helpers {
                                 .orElseThrow(() -> new RuntimeException("Role not Found"));
                         roles.add(modRole);
                         break;
+                    case "user":
+                        Roles user = roleRepository.findByName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Role not Found"));
+                        roles.add(user);
+                        break;
                     default:
                         Roles userRole = roleRepository.findByName(ERole.ROLE_USER)
                                 .orElseThrow(() -> new RuntimeException("Role not found"));

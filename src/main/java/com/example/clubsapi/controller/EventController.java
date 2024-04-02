@@ -7,6 +7,7 @@ import com.example.clubsapi.dto.EventUserResponseDto;
 import com.example.clubsapi.services.impl.EventServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    @Secured({"ROLE_MODERATOR"})
+    @PreAuthorize("hasRole('MODERATOR')")
     @PostMapping("/new/{clubName}")
     public ResponseEntity<?> createEvent(@PathVariable("clubName") String Clubname,
                                          @RequestBody EventDto eventDto){
@@ -34,7 +35,7 @@ public class EventController {
         return ResponseEntity.ok(res);
     }
 
-    @Secured({"ROLE_USER"})
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/join/{eventName}")
     public ResponseEntity<?> joinEvent(@PathVariable("eventName")String eventname){
         eventService.joinEvent(eventname);
@@ -43,28 +44,28 @@ public class EventController {
         return ResponseEntity.ok(res);
     }
 
-    @Secured({"ROLE_USER","ROLE_MODERATOR"})
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') ")
     @GetMapping("/allevents")
     public ResponseEntity<?> getEvents(){
         List<EventResponseDto> eventResponse = eventService.getAllEvents();
         return ResponseEntity.ok(eventResponse);
     }
 
-    @Secured({"ROLE_MODERATOR"})
+    @PreAuthorize("hasRole('MODERATOR')")
     @GetMapping("/alluserinevent")
     public ResponseEntity<?> getUsersJoinedEvent(){
         List<EventUserResponseDto> eventandUserJoinedEvens = eventService.getEventandUserJoinedEvens();
         return ResponseEntity.ok(eventandUserJoinedEvens);
     }
 
-    @Secured({"ROLE_MODERATOR"})
+    @PreAuthorize("hasRole('MODERATOR')")
     @PatchMapping("/update/{eventId}")
     public ResponseEntity<?> updateEvent(@PathVariable("eventId")int eventId,@RequestBody EventDto eventDto){
         EventDto dto = eventService.updateEvent(eventId,eventDto);
         return ResponseEntity.ok(dto);
 
     }
-    @Secured({"ROLE_MODERATOR"})
+    @PreAuthorize("hasRole('MODERATOR')")
     @DeleteMapping("/delete/{eventId}")
     public ResponseEntity<?> deleteEvent(@PathVariable("eventId")int id){
         eventService.deleteEvent(id);

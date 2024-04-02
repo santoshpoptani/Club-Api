@@ -24,17 +24,14 @@ public class UserEntity {
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_role",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-    @JsonIgnore
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Roles> roles = new HashSet<>();
 
     @ManyToMany(mappedBy = "userEntitySet")
-    @JsonIgnore
     private Set<Clubs> clubs = new HashSet<>();
 
     @ManyToMany
-    @JsonIgnore
     private Set<Event> events = new HashSet<>();
 
 }

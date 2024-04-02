@@ -41,7 +41,7 @@ public class securityFilter extends OncePerRequestFilter{
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             Token = authorizationHeader.substring(7);
             try{
-                username = loginDto.getUsername();
+                username = jwtutill.getSubject(Token);
             }catch (Exception e)
             {
                 System.out.println("Error Extracting username " + e.getMessage());

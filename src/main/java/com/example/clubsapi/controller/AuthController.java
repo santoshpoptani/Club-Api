@@ -52,6 +52,7 @@ public class AuthController {
         UserDetailsImp userDetailsImp =(UserDetailsImp) authentication.getPrincipal();
         Map<String,String> response = new HashMap<>();
         response.put("User", userDetailsImp.getUsername());
+        response.put("roles",userDetailsImp.getAuthorities().toString());
         response.put("Token",jwtToken);
         return ResponseEntity.ok(response);
     }

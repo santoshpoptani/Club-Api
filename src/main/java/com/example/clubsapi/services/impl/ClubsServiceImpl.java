@@ -63,10 +63,10 @@ public class ClubsServiceImpl implements ClubService {
         for (Clubs club :clubRepository.findAll())
         {
             ClubResponseDto nClub = new ClubResponseDto();
+            nClub.setId((long) club.getId());
             nClub.setTitle(club.getTitle());
             nClub.setContenet(club.getContent());
             nClub.setDate(club.getCreatedOn().toString());
-            nClub.setEventList(club.getEvents());
             list.add(nClub);
         }
         return list;

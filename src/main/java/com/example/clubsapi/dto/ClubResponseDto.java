@@ -11,18 +11,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClubResponseDto {
+    private Long id;
     private String Title;
     private String Contenet;
     private String Date;
-    private List<Event> eventList;
-
-    public List<Event> getEventList() {
-        return eventList;
-    }
-
-    public void setEventList(List<Event> eventList) {
-        this.eventList = eventList;
-    }
 
     public String getTitle() {
         return Title;
@@ -48,4 +40,11 @@ public class ClubResponseDto {
         Date = date;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

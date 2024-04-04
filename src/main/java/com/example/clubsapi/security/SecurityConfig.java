@@ -70,6 +70,7 @@ public class SecurityConfig {
                                         "/api/v1/auth/signup",
                                         "/api/v1/auth/**",
                                         "/api/v1/clubs/allclubs",
+                                        "/api/v1/clubs/id/**",
                                         "/v3/api-docs/**",
                                         "/v3/api-docs.yaml",
                                         "/swagger-ui/**",

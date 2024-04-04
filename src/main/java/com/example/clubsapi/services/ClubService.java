@@ -1,5 +1,6 @@
 package com.example.clubsapi.services;
 
+import com.example.clubsapi.dto.ClubDetailsDto;
 import com.example.clubsapi.dto.ClubDto;
 import com.example.clubsapi.dto.ClubResponseDto;
 import com.example.clubsapi.entity.Clubs;
@@ -14,4 +15,6 @@ public interface ClubService {
 
     void deleteclub(int id);
     ClubDto updateClub(ClubDto clubDto,int ClubId);
+
+    ClubDetailsDto getClub(int id);
 }

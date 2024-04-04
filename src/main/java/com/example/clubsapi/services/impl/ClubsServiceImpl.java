@@ -1,5 +1,6 @@
 package com.example.clubsapi.services.impl;
 
+import com.example.clubsapi.dto.ClubDetailsDto;
 import com.example.clubsapi.dto.ClubDto;
 import com.example.clubsapi.dto.ClubResponseDto;
 import com.example.clubsapi.entity.Clubs;
@@ -90,5 +91,19 @@ public class ClubsServiceImpl implements ClubService {
         clubRepository.save(clubs);
 
         return new ClubDto(clubs.getTitle(),clubs.getContent());
+    }
+
+    @Override
+    public ClubDetailsDto getClub(int id) {
+        Clubs club = clubRepository.findById(id).
+                orElseThrow(()->new ResousrceNotFoundException("Id is not Found"));
+        ClubDetailsDto clubDetailsDto = new ClubDetailsDto();
+        clubDetailsDto.setId((long)club.getId());
+        clubDetailsDto.setTitle(club.getTitle());
+        clubDetailsDto.setContenet(club.getContent());
+        clubDetailsDto.setEventList(club.getEvents());
+        clubDetailsDto.setDate(club.getCreatedOn().toString());
+
+        return  clubDetailsDto;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.clubsapi.controller;
 
+import com.example.clubsapi.dto.ClubDetailsDto;
 import com.example.clubsapi.dto.ClubDto;
 import com.example.clubsapi.dto.ClubResponseDto;
 import com.example.clubsapi.entity.Clubs;
@@ -54,6 +55,16 @@ public class ClubController {
         List<ClubResponseDto> collect = clubsService.findAllClubs();
 
         return ResponseEntity.ok(collect);
+    }
+
+    @GetMapping("/id/{clubId}")
+    public ResponseEntity<?> getClub(@PathVariable("clubId") int clubId){
+       try{
+           ClubDetailsDto club =clubsService.getClub(clubId);
+           return ResponseEntity.ok(club);
+       } catch (ResousrceNotFoundException resousrceNotFoundException){
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resousrceNotFoundException.getMessage());
+       }
     }
 
     @PreAuthorize("hasRole('MODERATOR')")

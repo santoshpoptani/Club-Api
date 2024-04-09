@@ -5,6 +5,8 @@ import Register from './components/Register'
 import Navigation from './components/Navigation'
 import Home from './components/Home'
 import Club from './components/Club'
+import Events from './components/Events'
+import EventDetail from './components/EventDetail'
 
 function App() {
   
@@ -17,6 +19,8 @@ function App() {
           <Route path='/register' element={<Register/>}></Route>
           <Route path='/' element={<Home/>}></Route>
           <Route path='/club/:id' element={<Club/>}></Route>
+          <Route path='/events' element={<Events/>}></Route>
+          <Route path='/event/:id' element={<EventDetail/>}></Route>
         </Routes>
       </Router>
       </>

@@ -1,0 +1,28 @@
+This is the club last best ouptu screen 
+ <div className="container mx-auto px-4 py-8">
+        <img
+          src="https://images.unsplash.com/photo-1607637508975-bf0090d7a0b4?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="Club Image"
+          className="mx-auto mb-6 rounded-lg shadow-md"
+          style={{ maxHeight: '500px',objectFit: 'cover', width: '100vw' }}
+        />
+        <h1 className="text-3xl font-bold mb-4">{clubData.title}</h1>
+        <p className="text-lg text-gray-700 mb-6">{clubData.content}</p>
+        <div className="grid grid-cols-1 gap-6">
+          {clubData.eventList?.map(item => (
+            <div key={item.id} className="bg-white shadow-md rounded-lg">
+              <img
+                src="card-image-url.jpg"
+                alt="Event Image"
+                className="w-full rounded-t-lg"
+                style={{ maxHeight: '200px', objectFit: 'cover' }}
+              />
+              <div className="p-4">
+                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                <p className="text-gray-700">{item.content}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+  

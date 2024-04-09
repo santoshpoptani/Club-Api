@@ -1,5 +1,6 @@
 package com.example.clubsapi.services.impl;
 
+import com.example.clubsapi.dto.EventDetailDto;
 import com.example.clubsapi.dto.EventDto;
 import com.example.clubsapi.dto.EventResponseDto;
 import com.example.clubsapi.dto.EventUserResponseDto;
@@ -64,8 +65,7 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(()->new ResousrceNotFoundException("Event not found"));
         String userContext = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = userRepository.findByName(userContext).get();
-        if (user.getClubs().contains(event.getClubs()))
-            event.getUserEntities().add(user);
+        event.getUserEntities().add(user);
         eventRepository.save(event);
     }
 
@@ -74,11 +74,13 @@ public class EventServiceImpl implements EventService {
         List<EventResponseDto> collect = eventRepository.findAll().stream()
                 .map((event ->
                         new EventResponseDto(
+                                event.getId(),
                                 event.getTitle(),
                                 event.getContent(),
                                 event.getStartDate(),
                                 event.getEndDate(),
-                                event.getClubs().getId()
+                                event.getClubs().getId(),
+                                event.getClubs().getTitle()
                         )
                 )).collect(Collectors.toList());
         return collect;
@@ -112,6 +114,21 @@ public class EventServiceImpl implements EventService {
     @Override
     public void deleteEvent(int eventId) {
         eventRepository.deleteById(eventId);
+    }
+
+    @Override
+    public EventDetailDto getEvent(int eventId) {
+        Event event = eventRepository.findById(eventId).
+                orElseThrow(()->new ResousrceNotFoundException("Event Not Found"));
+        EventDetailDto edto = new EventDetailDto();
+        edto.setEventName(event.getTitle());
+        edto.setDescription(event.getContent());
+        edto.setClubName(event.getClubs().getTitle());
+        edto.setClubsId(event.getClubs().getId());
+        edto.setUsers(event.getUserEntities().stream().toList());
+        edto.setStartDate(event.getStartDate());
+        edto.setEndDate(event.getEndDate());
+        return edto;
     }
 
 

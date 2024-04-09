@@ -57,7 +57,7 @@ public class ClubController {
         return ResponseEntity.ok(collect);
     }
 
-    @GetMapping("/id/{clubId}")
+    @GetMapping("/club-detail/{clubId}")
     public ResponseEntity<?> getClub(@PathVariable("clubId") int clubId){
        try{
            ClubDetailsDto club =clubsService.getClub(clubId);

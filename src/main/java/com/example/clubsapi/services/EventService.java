@@ -1,5 +1,6 @@
 package com.example.clubsapi.services;
 
+import com.example.clubsapi.dto.EventDetailDto;
 import com.example.clubsapi.dto.EventDto;
 import com.example.clubsapi.dto.EventResponseDto;
 import com.example.clubsapi.dto.EventUserResponseDto;
@@ -17,4 +18,6 @@ public interface EventService {
     EventDto updateEvent(int eventId,EventDto eventDto);
 
     void deleteEvent(int eventId);
+
+    EventDetailDto getEvent(int eventId);
 }

@@ -1,47 +1,18 @@
 package com.example.clubsapi.dto;
 
-import com.example.clubsapi.entity.Clubs;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.example.clubsapi.entity.UserEntity;
 
 import java.time.LocalDate;
+import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-public class EventResponseDto {
-
-    private int eventId;
-
-    public int getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(int eventId) {
-        this.eventId = eventId;
-    }
-
-    public int getClubsid() {
-        return clubsid;
-    }
-
-    public void setClubsid(int clubsid) {
-        this.clubsid = clubsid;
-    }
-
+public class EventDetailDto {
     private String EventName;
     private String Description;
     private LocalDate StartDate;
     private LocalDate EndDate;
-    private int clubsid;
+    private int clubsId;
     private String clubName;
-
-    public String getClubName() {
-        return clubName;
-    }
-
-    public void setClubName(String clubName) {
-        this.clubName = clubName;
-    }
+    private List<UserEntity> users;
 
     public String getEventName() {
         return EventName;
@@ -75,5 +46,27 @@ public class EventResponseDto {
         EndDate = endDate;
     }
 
+    public int getClubsId() {
+        return clubsId;
+    }
 
+    public void setClubsId(int clubsID) {
+        this.clubsId = clubsId;
+    }
+
+    public String getClubName() {
+        return clubName;
+    }
+
+    public void setClubName(String clubName) {
+        this.clubName = clubName;
+    }
+
+    public List<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserEntity> users) {
+        this.users = users;
+    }
 }

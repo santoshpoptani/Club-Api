@@ -5,8 +5,10 @@ import com.example.clubsapi.dto.EventDetailDto;
 import com.example.clubsapi.dto.EventDto;
 import com.example.clubsapi.dto.EventResponseDto;
 import com.example.clubsapi.dto.EventUserResponseDto;
+import com.example.clubsapi.entity.Event;
 import com.example.clubsapi.entity.UserEntity;
 import com.example.clubsapi.exception.ResousrceNotFoundException;
+import com.example.clubsapi.repository.EventRepository;
 import com.example.clubsapi.repository.UserRepository;
 import com.example.clubsapi.services.impl.EventServiceImpl;
 import com.example.clubsapi.utiltiy.AccessControl;
@@ -24,13 +26,13 @@ import java.util.Map;
 public class EventController {
 
     private EventServiceImpl eventService;
-    private UserRepository userRepository;
     private AccessControl accessControl;
+    private EventRepository eventRepository;
 
-    public EventController(EventServiceImpl eventService, UserRepository userRepository, AccessControl accessControl) {
+    public EventController(EventServiceImpl eventService, AccessControl accessControl,EventRepository eventRepository) {
         this.eventService = eventService;
-        this.userRepository = userRepository;
         this.accessControl = accessControl;
+        this.eventRepository = eventRepository;
     }
 
     @PreAuthorize("hasRole('MODERATOR')")
@@ -47,10 +49,22 @@ public class EventController {
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
     @PostMapping("/join/{eventName}")
     public ResponseEntity<?> joinEvent(@PathVariable("eventName")String eventname){
-        eventService.joinEvent(eventname);
-        Map<String,String> res = new HashMap<>();
-        res.put("Message","Event joined succesfully");
-        return ResponseEntity.ok(res);
+        if(accessControl.joinEvent(eventname))
+        {
+            eventService.joinEvent(eventname);
+            Map<String,String> res = new HashMap<>();
+            res.put("Message","Event joined succesfully");
+            return ResponseEntity.ok(res);
+        }
+        else{
+            Event ev = eventRepository.findByTitle(eventname).
+                    orElseThrow(()->new ResousrceNotFoundException("Event Not Found"));
+            String clubName = ev.getClubs().getTitle();
+            Map<String,String> res = new HashMap<>();
+            res.put("Message","Please join the club "+ clubName);
+            return ResponseEntity.badRequest().body(res);
+        }
+
     }
 
     @GetMapping("/allevents")

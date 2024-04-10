@@ -37,6 +37,15 @@ public class ClubController {
         this.accessControl = accessControl;
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
+    @PostMapping("/join/{clubName}")
+    public ResponseEntity<?> joinClub(@PathVariable("clubName") String clubName){
+        clubsService.joinClub(clubName);
+        Map<String,String> resp = new HashMap<>();
+        resp.put("Message","Joined the club "+clubName);
+        return ResponseEntity.ok(resp);
+    }
+
     @PostMapping("/new")
     @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<?> saveClub(@RequestBody ClubDto clubDto) {
@@ -87,7 +96,7 @@ public class ClubController {
     @PatchMapping("/update/{clubId}")
     public ResponseEntity<?> updateClub(@RequestBody ClubDto clubDto, @PathVariable("clubId") int clubId) {
 
-        if( accessControl.clubUpdateUtility(clubId,clubDto)){
+        if( accessControl.clubUpdateUtility(clubId)){
             ClubDto cLubDto = clubsService.updateClub(clubDto, clubId);
             return ResponseEntity.ok(cLubDto);
         }

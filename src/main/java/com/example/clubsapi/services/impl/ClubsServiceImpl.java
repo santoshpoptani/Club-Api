@@ -3,11 +3,13 @@ package com.example.clubsapi.services.impl;
 import com.example.clubsapi.dto.ClubDetailsDto;
 import com.example.clubsapi.dto.ClubDto;
 import com.example.clubsapi.dto.ClubResponseDto;
+import com.example.clubsapi.entity.ClubModerator;
 import com.example.clubsapi.entity.Clubs;
 import com.example.clubsapi.entity.ERole;
 import com.example.clubsapi.entity.UserEntity;
 import com.example.clubsapi.exception.AuthorizatoinException;
 import com.example.clubsapi.exception.ResousrceNotFoundException;
+import com.example.clubsapi.repository.ClubModeratorRepository;
 import com.example.clubsapi.repository.ClubRepository;
 import com.example.clubsapi.repository.EventRepository;
 import com.example.clubsapi.repository.UserRepository;
@@ -25,12 +27,14 @@ public class ClubsServiceImpl implements ClubService {
     private ClubRepository clubRepository;
     private UserRepository userRepository;
     private EventRepository eventRepository;
+    private ClubModeratorRepository clubModeratorRepository;
 
 
-    public ClubsServiceImpl(ClubRepository clubRepository,UserRepository userRepository,EventRepository eventRepository) {
+    public ClubsServiceImpl(ClubRepository clubRepository,UserRepository userRepository,EventRepository eventRepository , ClubModeratorRepository clubModeratorRepository) {
         this.clubRepository = clubRepository;
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
+        this.clubModeratorRepository = clubModeratorRepository;
     }
 
     @Override
@@ -39,13 +43,19 @@ public class ClubsServiceImpl implements ClubService {
         clubs.setTitle(clubDto.getClubName());
         clubs.setContent(clubDto.getContent());
         clubs.setCreatedOn(LocalDate.now());
+
         String userContext= (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         UserEntity user =userRepository.findByUsername(userContext).
                 orElseThrow(()->new ResousrceNotFoundException("User not found"));
-        if(user.getRoles().stream().toList().get(0).getName()!= ERole.ROLE_MODERATOR )
-            throw new AuthorizatoinException("UnAuthorized");
+
         clubs.getUserEntitySet().add(user);
         clubRepository.save(clubs);
+
+        ClubModerator clubModerator = new ClubModerator();
+        clubModerator.setClub(clubs);
+        clubModerator.setUser(user);
+        clubModeratorRepository.save(clubModerator);
     }
 
     @Override

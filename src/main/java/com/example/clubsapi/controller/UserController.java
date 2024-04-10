@@ -17,21 +17,4 @@ import java.util.Map;
 @RequestMapping("/api/v1/user")
 public class UserController {
 
-    private ClubsServiceImpl clubsService;
-
-    public UserController(ClubsServiceImpl clubsService) {
-        this.clubsService = clubsService;
-    }
-
-
-
-    @Secured({"ROLE_USER"})
-    @PostMapping("/join/{clubName}")
-    public ResponseEntity<?> joinClub(@PathVariable("clubName") String clubName){
-            clubsService.joinClub(clubName);
-        Map<String,String> resp = new HashMap<>();
-        resp.put("Message","Joined the club "+clubName);
-        return ResponseEntity.ok(resp);
-    }
-
 }

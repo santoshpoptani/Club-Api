@@ -51,10 +51,19 @@ public class EventController {
     public ResponseEntity<?> joinEvent(@PathVariable("eventName")String eventname){
         if(accessControl.joinEvent(eventname))
         {
-            eventService.joinEvent(eventname);
-            Map<String,String> res = new HashMap<>();
-            res.put("Message","Event joined succesfully");
-            return ResponseEntity.ok(res);
+            if(eventService.isUserPresent(eventname)) {
+                Map<String,String> res = new HashMap<>();
+                res.put("Message","You Have Already Joined The Event");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(res);
+            }
+
+            else {
+                eventService.joinEvent(eventname);
+                Map<String,String> res = new HashMap<>();
+                res.put("Message","Event joined succesfully");
+                return ResponseEntity.ok(res);
+            }
+
         }
         else{
             Event ev = eventRepository.findByTitle(eventname).

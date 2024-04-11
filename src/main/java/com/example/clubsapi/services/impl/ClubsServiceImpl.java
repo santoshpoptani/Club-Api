@@ -116,4 +116,17 @@ public class ClubsServiceImpl implements ClubService {
 
         return  clubDetailsDto;
     }
+
+    @Override
+    public boolean isJoinedClub(String clubName) {
+        Clubs cl =clubRepository.findByTitle(clubName)
+                .orElseThrow(()->new ResousrceNotFoundException("Club not Found"));
+        List<UserEntity> userEntities = cl.getUserEntitySet().stream().toList();
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        for(UserEntity user : userEntities){
+            if(user.getUsername().equals(principal))
+                return true;
+        }
+        return false;
+    }
 }

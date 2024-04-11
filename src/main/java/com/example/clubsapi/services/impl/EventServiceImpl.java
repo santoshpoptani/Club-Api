@@ -131,5 +131,18 @@ public class EventServiceImpl implements EventService {
         return edto;
     }
 
+    @Override
+    public boolean isUserPresent(String eventName) {
+        Event eve = eventRepository.findByTitle(eventName)
+                .orElseThrow(()-> new ResousrceNotFoundException("Event Not Found"));
+        List<UserEntity> userEntities = eve.getUserEntities().stream().toList();
+        String principal = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        for(UserEntity user : userEntities){
+            if(user.getUsername().equals(principal) )
+                return true;
+        }
+        return false;
+    }
+
 
 }

@@ -20,4 +20,6 @@ public interface EventService {
     void deleteEvent(int eventId);
 
     EventDetailDto getEvent(int eventId);
+
+    boolean isUserPresent(String eventName);
 }

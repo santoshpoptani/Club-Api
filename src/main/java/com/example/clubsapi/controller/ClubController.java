@@ -40,10 +40,19 @@ public class ClubController {
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
     @PostMapping("/join/{clubName}")
     public ResponseEntity<?> joinClub(@PathVariable("clubName") String clubName){
-        clubsService.joinClub(clubName);
-        Map<String,String> resp = new HashMap<>();
-        resp.put("Message","Joined the club "+clubName);
-        return ResponseEntity.ok(resp);
+        if(clubsService.isJoinedClub(clubName)){
+            Map<String,String> resp = new HashMap<>();
+            resp.put("Message","You have Already Joined the Club");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(resp);
+        }
+        else {
+            clubsService.joinClub(clubName);
+            Map<String,String> resp = new HashMap<>();
+            resp.put("Message","you Have Joined " + clubName +" Club");
+            return ResponseEntity.ok(resp);
+        }
+
+
     }
 
     @PostMapping("/new")

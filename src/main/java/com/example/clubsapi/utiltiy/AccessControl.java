@@ -30,27 +30,14 @@ public class AccessControl {
     }
 
 
-
-    public boolean clubUpdateUtility(int culbId){
+    public boolean checkClubDataOwner(int clubId){
         Optional<List<Integer>> clubIds = clubModeratorRepository.findClubsId(getUserFromSecurityContext().getId());
-
         for(Integer cl : clubIds.get()){
-            if(cl == culbId) {
+            if(cl == clubId) {
                 return true;
             }
         }
         return false;
-    }
-
-    public boolean deleteClubUtility(int clubId){
-        Optional<List<Integer>> clubIds = clubModeratorRepository.findClubsId(getUserFromSecurityContext().getId());
-       for(Integer cl : clubIds.get()){
-           if(cl == clubId) {
-               return true;
-           }
-       }
-        return false;
-
     }
     private UserEntity getUserFromSecurityContext(){
         String userContext= (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -60,8 +47,8 @@ public class AccessControl {
 
     }
 
-    public boolean updateEventUtility(int eventId){
-        Optional<List<Clubs>> clubs = clubModeratorRepository.findEventsId(getUserFromSecurityContext().getId());
+    public boolean checkDataOwner(int eventId){
+        Optional<List<Clubs>> clubs = clubModeratorRepository.findClubs(getUserFromSecurityContext().getId());
 
         for(Clubs c : clubs.get()){
             for (Event e : c.getEvents())
@@ -70,18 +57,6 @@ public class AccessControl {
         }
 
         return false;
-    }
-
-    public  boolean deleteEventUtility(int eventId){
-        Optional<List<Clubs>> clubs = clubModeratorRepository.findEventsId(getUserFromSecurityContext().getId());
-
-        for(Clubs c : clubs.get()){
-            for (Event e : c.getEvents())
-                if(e.getId()==eventId)
-                    return true;
-        }
-
-        return  false;
     }
 
     public  boolean joinEvent(String eventName){

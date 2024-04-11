@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,8 +80,19 @@ public class ClubController {
     @GetMapping("/club-detail/{clubId}")
     public ResponseEntity<?> getClub(@PathVariable("clubId") int clubId){
        try{
-           ClubDetailsDto club =clubsService.getClub(clubId);
-           return ResponseEntity.ok(club);
+           Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+           if(authentication instanceof AnonymousAuthenticationToken){
+               ClubDetailsDto club =clubsService.getClub(clubId);
+               return ResponseEntity.ok(club);
+           } else if (accessControl.checkClubDataOwner(clubId)) {
+               ClubDetailsDto club =clubsService.getClub(clubId);
+               club.setOwned(true);
+               return ResponseEntity.ok(club);
+           }else {
+               ClubDetailsDto club =clubsService.getClub(clubId);
+               return ResponseEntity.ok(club);
+           }
+
        } catch (ResousrceNotFoundException resousrceNotFoundException){
           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resousrceNotFoundException.getMessage());
        }
@@ -89,7 +102,7 @@ public class ClubController {
     @DeleteMapping("/delete/{clubId}")
     public ResponseEntity<?> deleteClub(@PathVariable("clubId") int clubId) {
 
-        if(accessControl.deleteClubUtility(clubId)){
+        if(accessControl.checkClubDataOwner(clubId)){
             clubsService.deleteclub(clubId);
             return ResponseEntity.status(HttpStatus.OK).body("Club Deleted");
         }
@@ -105,7 +118,7 @@ public class ClubController {
     @PatchMapping("/update/{clubId}")
     public ResponseEntity<?> updateClub(@RequestBody ClubDto clubDto, @PathVariable("clubId") int clubId) {
 
-        if( accessControl.clubUpdateUtility(clubId)){
+        if( accessControl.checkClubDataOwner(clubId)){
             ClubDto cLubDto = clubsService.updateClub(clubDto, clubId);
             return ResponseEntity.ok(cLubDto);
         }

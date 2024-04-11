@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import '../css/home.css';
 function Home(){
     const[clubs, setSlubs] = useState([]);
+    
 
     useEffect(()=>{
         async function fetch(){

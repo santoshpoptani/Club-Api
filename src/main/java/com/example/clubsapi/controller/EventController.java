@@ -15,6 +15,9 @@ import com.example.clubsapi.utiltiy.AccessControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -84,9 +87,23 @@ public class EventController {
 
     @GetMapping("/event-detail/{eventId}")
     public ResponseEntity<?> getevent(@PathVariable("eventId") int eventId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try{
-            EventDetailDto eventDetailDto =eventService.getEvent(eventId);
-            return ResponseEntity.ok(eventDetailDto);
+           if(authentication instanceof AnonymousAuthenticationToken){
+               EventDetailDto eventDetailDto =eventService.getEvent(eventId);
+               return ResponseEntity.ok(eventDetailDto);
+           }
+           else if(accessControl.checkDataOwner(eventId)) {
+               EventDetailDto eventDetailDto =eventService.getEvent(eventId);
+               eventDetailDto.setOwned(true);
+               return ResponseEntity.ok(eventDetailDto);
+           }
+           else {
+               EventDetailDto eventDetailDto =eventService.getEvent(eventId);
+               return ResponseEntity.ok(eventDetailDto);
+           }
+
+
         }catch (ResousrceNotFoundException re){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(re.getMessage());
         }
@@ -102,7 +119,7 @@ public class EventController {
     @PreAuthorize("hasRole('MODERATOR')")
     @PatchMapping("/update/{eventId}")
     public ResponseEntity<?> updateEvent(@PathVariable("eventId")int eventId,@RequestBody EventDto eventDto){
-        if(accessControl.updateEventUtility(eventId)){
+        if(accessControl.checkDataOwner(eventId)){
             EventDto dto = eventService.updateEvent(eventId,eventDto);
             return ResponseEntity.ok(dto);
         }
@@ -115,7 +132,7 @@ public class EventController {
     @PreAuthorize("hasRole('MODERATOR')")
     @DeleteMapping("/delete/{eventId}")
     public ResponseEntity<?> deleteEvent(@PathVariable("eventId")int id){
-        if(accessControl.deleteEventUtility(id)){
+        if(accessControl.checkDataOwner(id)){
             eventService.deleteEvent(id);
             return ResponseEntity.ok().build();
         }

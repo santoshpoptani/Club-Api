@@ -19,6 +19,7 @@ function Navigation(){
                     <>
                         <Link to="/" className="text-white hover:text-gray-200 transition duration-300">Home</Link>
                         <Link to="/events" className="text-white hover:text-gray-200 transition duration-300">Events</Link>
+                        <Link to="/profile" className="text-white hover:text-gray-200 transition duration-300">Profile</Link>
                         <button onClick={handleLogout} className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition duration-300">Logout</button>
                     </>
                 ) : (

@@ -12,6 +12,17 @@ public class EventDetailDto {
     private LocalDate EndDate;
     private int clubsId;
     private String clubName;
+
+    private boolean owned = false;
+
+    public boolean isOwned() {
+        return owned;
+    }
+
+    public void setOwned(boolean owned) {
+        this.owned = owned;
+    }
+
     private List<UserEntity> users;
 
     public String getEventName() {

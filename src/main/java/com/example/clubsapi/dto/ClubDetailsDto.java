@@ -9,6 +9,17 @@ public class ClubDetailsDto {
     private String Title;
     private String Contenet;
     private String Date;
+
+    private boolean owned = false;
+
+    public boolean isOwned() {
+        return owned;
+    }
+
+    public void setOwned(boolean owned) {
+        this.owned = owned;
+    }
+
     private List<Event> eventList;
 
     public Long getId() {

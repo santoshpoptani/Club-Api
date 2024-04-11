@@ -17,5 +17,5 @@ public interface ClubModeratorRepository extends JpaRepository<ClubModerator,Int
     Optional<List<Integer>> findClubsId(int userId);
 
     @Query("select u.club from ClubModerator u where u.user.id = :userId")
-    Optional<List<Clubs>> findEventsId(int userId);
+    Optional<List<Clubs>> findClubs(int userId);
 }

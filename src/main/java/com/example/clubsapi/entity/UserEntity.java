@@ -33,7 +33,7 @@ public class UserEntity {
     @JsonIgnore
     private Set<Clubs> clubs = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "userEntities")
     @JsonIgnore
     private Set<Event> events = new HashSet<>();
 

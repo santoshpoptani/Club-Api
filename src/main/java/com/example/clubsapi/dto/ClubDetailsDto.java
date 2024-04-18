@@ -1,14 +1,25 @@
 package com.example.clubsapi.dto;
 
 import com.example.clubsapi.entity.Event;
+import com.example.clubsapi.entity.UserEntity;
 
 import java.util.List;
 
 public class ClubDetailsDto {
     private Long id;
     private String Title;
-    private String Contenet;
+    private String Content;
     private String Date;
+
+    private List<UserEntity> users;
+
+    public List<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUser(List<UserEntity> users) {
+        this.users = users;
+    }
 
     private boolean owned = false;
 
@@ -38,12 +49,12 @@ public class ClubDetailsDto {
         Title = title;
     }
 
-    public String getContenet() {
-        return Contenet;
+    public String getContent() {
+        return Content;
     }
 
-    public void setContenet(String contenet) {
-        Contenet = contenet;
+    public void setContent(String content) {
+        Content = content;
     }
 
     public String getDate() {

@@ -17,5 +17,6 @@ public interface ClubService {
     ClubDto updateClub(ClubDto clubDto,int ClubId);
 
     ClubDetailsDto getClub(int id);
+    ClubDetailsDto getClubByName(String clubname);
     boolean isJoinedClub(String clubName);
 }

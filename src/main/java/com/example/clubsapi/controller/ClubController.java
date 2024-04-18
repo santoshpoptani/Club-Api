@@ -77,25 +77,34 @@ public class ClubController {
         return ResponseEntity.ok(collect);
     }
 
-    @GetMapping("/club-detail/{clubId}")
-    public ResponseEntity<?> getClub(@PathVariable("clubId") int clubId){
-       try{
-           Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-           if(authentication instanceof AnonymousAuthenticationToken){
-               ClubDetailsDto club =clubsService.getClub(clubId);
-               return ResponseEntity.ok(club);
-           } else if (accessControl.checkClubDataOwner(clubId)) {
-               ClubDetailsDto club =clubsService.getClub(clubId);
-               club.setOwned(true);
-               return ResponseEntity.ok(club);
-           }else {
-               ClubDetailsDto club =clubsService.getClub(clubId);
-               return ResponseEntity.ok(club);
-           }
+    @GetMapping("/club-detail/")
+    public ResponseEntity<?> getClub( @RequestParam(value = "clubId", required = false) Integer clubId,
+                                      @RequestParam(value = "clubName", required = false) String clubName){
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            ClubDetailsDto club = null;
 
-       } catch (ResousrceNotFoundException resousrceNotFoundException){
-          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resousrceNotFoundException.getMessage());
-       }
+            if (clubId != null) {
+                if (authentication instanceof AnonymousAuthenticationToken) {
+                    club = clubsService.getClub(clubId);
+                } else if (accessControl.checkClubDataOwner(clubId)) {
+                    club = clubsService.getClub(clubId);
+                    club.setOwned(true);
+                } else {
+                    club = clubsService.getClub(clubId);
+                }
+            } else if (clubName != null) {
+                club = clubsService.getClubByName(clubName); // Assuming you have a method to fetch club by name
+            }
+
+            if (club != null) {
+                return ResponseEntity.ok(club);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Club not found");
+            }
+        } catch (ResousrceNotFoundException resourceNotFoundException) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resourceNotFoundException.getMessage());
+        }
     }
 
     @PreAuthorize("hasRole('MODERATOR')")

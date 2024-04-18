@@ -5,16 +5,13 @@ import com.example.clubsapi.dto.ClubDto;
 import com.example.clubsapi.dto.ClubResponseDto;
 import com.example.clubsapi.entity.ClubModerator;
 import com.example.clubsapi.entity.Clubs;
-import com.example.clubsapi.entity.ERole;
 import com.example.clubsapi.entity.UserEntity;
-import com.example.clubsapi.exception.AuthorizatoinException;
 import com.example.clubsapi.exception.ResousrceNotFoundException;
 import com.example.clubsapi.repository.ClubModeratorRepository;
 import com.example.clubsapi.repository.ClubRepository;
 import com.example.clubsapi.repository.EventRepository;
 import com.example.clubsapi.repository.UserRepository;
 import com.example.clubsapi.services.ClubService;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -110,10 +107,24 @@ public class ClubsServiceImpl implements ClubService {
         ClubDetailsDto clubDetailsDto = new ClubDetailsDto();
         clubDetailsDto.setId((long)club.getId());
         clubDetailsDto.setTitle(club.getTitle());
-        clubDetailsDto.setContenet(club.getContent());
+        clubDetailsDto.setContent(club.getContent());
         clubDetailsDto.setEventList(club.getEvents());
         clubDetailsDto.setDate(club.getCreatedOn().toString());
+        clubDetailsDto.setUser(club.getUserEntitySet().stream().toList());
+        return  clubDetailsDto;
+    }
 
+    @Override
+    public ClubDetailsDto getClubByName(String clubname) {
+        Clubs club = clubRepository.findByTitle(clubname).
+                orElseThrow(()->new ResousrceNotFoundException("Id is not Found"));
+        ClubDetailsDto clubDetailsDto = new ClubDetailsDto();
+        clubDetailsDto.setId((long)club.getId());
+        clubDetailsDto.setTitle(club.getTitle());
+        clubDetailsDto.setContent(club.getContent());
+        clubDetailsDto.setEventList(club.getEvents());
+        clubDetailsDto.setDate(club.getCreatedOn().toString());
+        clubDetailsDto.setUser(club.getUserEntitySet().stream().toList());
         return  clubDetailsDto;
     }
 

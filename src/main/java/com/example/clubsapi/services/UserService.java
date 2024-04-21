@@ -7,4 +7,6 @@ public interface UserService {
     void saveUser(UserRegistrationDto userRegistrationDto);
 
     ProfileDto getUserProfile();
+
+    String changePassword(String UserName, String oldPassword , String newPassword);
 }

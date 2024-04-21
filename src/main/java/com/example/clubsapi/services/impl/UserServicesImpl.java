@@ -3,6 +3,7 @@ package com.example.clubsapi.services.impl;
 import com.example.clubsapi.dto.ProfileDto;
 import com.example.clubsapi.dto.UserRegistrationDto;
 import com.example.clubsapi.entity.*;
+import com.example.clubsapi.exception.AuthorizatoinException;
 import com.example.clubsapi.exception.ResousrceNotFoundException;
 import com.example.clubsapi.repository.ClubModeratorRepository;
 import com.example.clubsapi.repository.EventRepository;
@@ -121,4 +122,33 @@ public class UserServicesImpl implements UserService {
 
         return profile;
     }
+
+    @Override
+    public String changePassword(String UserName, String oldPassword,String newPassword) {
+        UserEntity user = userRepository.findByUsername(UserName).
+                orElseThrow(() -> new ResousrceNotFoundException("User Not Found"));
+
+        if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+            String encodedNewPassword = passwordEncoder.encode(newPassword);
+            user.setPassword(encodedNewPassword);
+            userRepository.save(user);
+
+            // Check if the password update was successful
+            UserEntity updatedUser = userRepository.findByUsername(UserName)
+                    .orElseThrow(() -> new ResousrceNotFoundException("User Not Found"));
+
+            if (passwordEncoder.matches(newPassword, updatedUser.getPassword())) {
+                // Password update successful
+                return "Password updated successfully";
+            } else {
+                // Password update failed
+                return "Password update failed";
+            }
+        } else {
+            throw new AuthorizatoinException("Incorrect old password");
+        }
+
+    }
+
+
 }

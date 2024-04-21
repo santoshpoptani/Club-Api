@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-function Sidebar({roles , handleCreateClub , handelCreateEvent }){
+function Sidebar({roles , handleCreateClub , handelCreateEvent ,handelChangePassword }){
     
 return(<>
   <div className="fixed left-0 h-full w-64 bg-gradient-to-r from-blue-900 to-blue-800 text-white flex flex-col items-center justify-start py-6 transition-all duration-300 shadow-lg">
@@ -23,7 +23,9 @@ return(<>
         </li>
       </>
     )}
-    <li className="hover:text-blue-300 transition-colors duration-300 cursor-pointer">Change Password</li>
+    <li className="hover:text-blue-300 transition-colors duration-300 cursor-pointer">
+      <Link onClick={handelChangePassword}>Change Password</Link>
+      </li>
 
   </ul>
 </div>

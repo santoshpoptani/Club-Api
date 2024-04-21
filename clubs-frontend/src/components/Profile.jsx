@@ -6,6 +6,7 @@ import CreateClubModal from "./Profile/CreateClubModal";
 import CreateEventModal from "./Profile/CreateEventModal";
 import EventupdateModal from "./Profile/EventUpdateModal";
 import ClubUpdateModal from "./Profile/ClubUpdateModal";
+import ChangePasswordModal from "./Profile/ChangePasswordModal";
 
 
 function Profile(){
@@ -15,8 +16,13 @@ function Profile(){
     const [isCreateEventModalOpen, setIsCreateEventModalOpen] = useState(false);
     const [isEventUpdateModalOpen, setIsEventUpdateModalOpen] = useState(false);
     const [isClubUPdateModalOpen, setIsClubUpdateModalOpen] = useState(false);
+    const [isChangePasswordModalOpen, setIsChangePassword] = useState(false);
     const [eventID , setEventID] = useState(null);
     const [clubTitle , setClubTitle] = useState(null);
+
+    const handelChangePassword = ()=>{
+      setIsChangePassword(true);
+    }
 
     const hadelEventUpdateModal =(eventindex) => {
         setEventID(eventindex)
@@ -39,6 +45,7 @@ function Profile(){
         setIsCreateEventModalOpen(false);
         setIsClubUpdateModalOpen(false)
         setIsEventUpdateModalOpen(false)
+        setIsChangePassword(false)
         
       };
     useEffect(()=>{
@@ -65,6 +72,7 @@ function Profile(){
             roles={auth.roles}
             handleCreateClub={handelCreateClub}
             handelCreateEvent={handleCreateEvent}
+            handelChangePassword={handelChangePassword}
           />
         </div>
         <div className="col-span-2">
@@ -89,13 +97,13 @@ function Profile(){
                           className="bg-white rounded-lg shadow-md p-2"
                         >
                           <h3 className="text-lg font-semibold mb-2">
-                            <a onClick={()=>handelClubUpdateModal(Object.keys(club)[0])}> {Object.keys(club)[0]}</a>
+                            <a className="cursor-pointer hover:text-blue-500" onClick={()=>handelClubUpdateModal(Object.keys(club)[0])}> {Object.keys(club)[0]}</a>
                           </h3>
                           <ul className="list-disc list-inside">
                             {club[Object.keys(club)[0]].map(
                               (event, eventIndex) => (
                                 <li key={eventIndex}>
-                                  <a onClick={()=>hadelEventUpdateModal(eventIndex)}>{event.title}</a>
+                                  <a className="cursor-pointer hover:text-blue-500" onClick={()=>hadelEventUpdateModal(event.id)}>{event.title}</a>
                                 </li>
                               )
                             )}
@@ -229,6 +237,13 @@ function Profile(){
           <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-4 rounded-lg shadow-md">
              <ClubUpdateModal onClose={handleModalClose} club_Title = {clubTitle}/>
+            </div>
+          </div>
+        )}
+        {isChangePasswordModalOpen && (
+          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-4 rounded-lg shadow-md">
+             < ChangePasswordModal onClose={handleModalClose} username = {userData.name} />
             </div>
           </div>
         )}

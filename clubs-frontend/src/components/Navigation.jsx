@@ -1,11 +1,14 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation ,useNavigate } from "react-router-dom";
 function Navigation(){
     const auth = JSON.parse(localStorage.getItem("user"));
     useLocation();
 
+    const navigate = useNavigate();
+
     const handleLogout=()=>{
         localStorage.removeItem("user");
+        navigate("/")
     }
 
     return (
